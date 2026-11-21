@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: oven-sh/setup-bun@v2
+      - name: Rust tests
+        run: cargo test --release
+      - name: Build WASM
+        run: bun run build:wasm
+      - name: Check out the JS reference libraries
+        run: |
+          git clone --depth 1 https://github.com/ratmath/linalg ../linalg || true
+          git clone --depth 1 https://github.com/ratmath/graphics ../graphics || true
+          for d in ../linalg ../graphics; do [ -f "$d/package.json" ] && (cd "$d" && bun install) || true; done
+      - name: Cross-check against JS (skips a library whose code is not on main yet)
+        run: bun test ./tests

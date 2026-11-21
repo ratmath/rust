@@ -1,0 +1,4 @@
+module RatMathCore {
+    header "ratmath.h"
+    export *
+}

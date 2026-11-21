@@ -1,0 +1,21 @@
+{
+  "name": "@ratmath/rust",
+  "version": "0.1.0",
+  "description": "Rust/WebAssembly kernels for RatMath's hot exact arithmetic, as an opt-in backend for @ratmath/linalg and @ratmath/graphics",
+  "type": "module",
+  "main": "js/index.js",
+  "exports": {
+    ".": "./js/index.js",
+    "./bytecode": "./js/bytecode.js",
+    "./ratmath.wasm": "./js/ratmath.wasm"
+  },
+  "files": ["js/", "README.md", "BACKEND.md", "WIRE.md", "LICENSE"],
+  "scripts": {
+    "build:wasm": "cargo build --release --target wasm32-unknown-unknown && cp target/wasm32-unknown-unknown/release/ratmath.wasm js/ratmath.wasm",
+    "test:rust": "cargo test --release",
+    "test": "bun run build:wasm && bun test ./tests",
+    "bench": "bun bench/bench.js"
+  },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/ratmath/rust" }
+}
