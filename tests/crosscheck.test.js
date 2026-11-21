@@ -73,6 +73,7 @@ const shapes = [];
 }
 
 describe.skipIf(!haveLinalg)("linalg cross-check", async () => {
+  if (!haveLinalg) return; // bun still runs a skipped describe body
   const X = await import(resolve(linalgDir, "src/exact.js"));
   const squares = shapes.filter((m) => m.length === m[0].length);
 
@@ -139,10 +140,10 @@ describe.skipIf(!haveLinalg)("linalg cross-check", async () => {
 });
 
 describe.skipIf(!haveGraphics)("graphics cross-check", async () => {
+  if (!haveGraphics) return;
   const { certifyGraph } = await import(resolve(graphicsDir, "src/plot.js"));
   const { parse, paramsToRational } = await import(resolve(graphicsDir, "src/expr.js"));
   const { viewport, precisionFor } = await import(resolve(graphicsDir, "src/viewport.js"));
-  const { run } = await import(resolve(graphicsDir, "src/refine.js")).catch(() => ({}));
 
   const drive = (gen) => {
     for (;;) {
@@ -195,10 +196,10 @@ describe.skipIf(!haveGraphics)("graphics cross-check", async () => {
       expect(cols.reduce((s, c) => s + c.evaluations, 0)).toBe(ref.evaluations);
     });
   }
-  void run;
 });
 
 describe.skipIf(!haveGraphics)("graphics fuzz", async () => {
+  if (!haveGraphics) return;
   const { certifyGraph } = await import(resolve(graphicsDir, "src/plot.js"));
   const { parse } = await import(resolve(graphicsDir, "src/expr.js"));
   const { viewport, precisionFor } = await import(resolve(graphicsDir, "src/viewport.js"));
